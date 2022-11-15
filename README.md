@@ -1,6 +1,6 @@
 # train-CLIP-Deep Lake 📎
 
-A PyTorch Lightning solution to training CLIP from both scratch and fine-tuning. Source from https://github.com/Zasder3/train-CLIP
+A PyTorch Lightning solution to training CLIP from both scratch and fine-tuning using Deep Lake as the data lake. Source from https://github.com/Zasder3/train-CLIP
  
 ## Usage with Deep Lake 🚂
 
