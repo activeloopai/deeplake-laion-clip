@@ -86,6 +86,27 @@ Data-Efficient Language-Supervised Zero-Shot Learning with Self-Distillation
 }
 ```
 
+Data-Efficient Language-Supervised Zero-Shot Learning with Self-Distillation
+```
+@article{cheng2021data,
+  title={Data-Efficient Language-Supervised Zero-Shot Learning with Self-Distillation},
+  author={Cheng, Ruizhe and Wu, Bichen and Zhang, Peizhao and Vajda, Peter and Gonzalez, Joseph E},
+  journal={arXiv preprint arXiv:2104.08945},
+  year={2021}
+}
+```
+
+Deep Lake: a Lakehouse for Deep Learning
+```
+@article{hambardzumyan2022deep,
+  title={Deep Lake: a Lakehouse for Deep Learning},
+  author={Hambardzumyan, Sasun and Tuli, Abhinav and Ghukasyan, Levon and Rahman, Fariz and Topchyan, Hrant and Isayan, David and Harutyunyan, Mikayel and Hakobyan, Tatevik and Stranic, Ivo and Buniatyan, Davit},
+  journal={arXiv preprint arXiv:2209.10785},
+  year={2022}
+}
+```
+
+
 ## TODO ✅
 
 - [x] Get OpenAI's model creation script
