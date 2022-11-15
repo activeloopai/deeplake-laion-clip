@@ -50,6 +50,7 @@ dask-worker-space/
 *.sqlite
 *.parquet
 **/dummy_data/**/deeplake/
+*dataset/laion
 
 # OS generated files #
 ######################

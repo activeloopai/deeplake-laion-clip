@@ -1,12 +1,12 @@
 # train-CLIP 📎
 
-A PyTorch Lightning solution to training CLIP from both scratch and fine-tuning.
+A PyTorch Lightning solution to training CLIP from both scratch and fine-tuning. Source from https://github.com/Zasder3/train-CLIP
  
 ## Usage with Deep Lake 🚂
 
 
 ```
-python train.py --model_name ViT-B/16  --batch_size 64 --accelerator gpu --gpus 2 --strategy ddp --path 's3://hub-2.0-datasets-n/laion400m-data'
+python train.py --path 's3://hub-2.0-datasets-n/laion400m-data' --model_name ViT-B/16  --batch_size 48 --accelerator gpu --gpus 2 --strategy ddp 
 ```
 
 

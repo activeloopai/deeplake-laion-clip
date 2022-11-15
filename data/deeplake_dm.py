@@ -4,11 +4,11 @@ import clip
 from torchvision import transforms as T
 from pytorch_lightning import LightningDataModule
 
+import numpy as np
 import torch
 import deeplake
 from deeplake.experimental import dataloader
 from deeplake.util.iterable_ordered_dict import IterableOrderedDict
-import numpy as np
 
 def image_transform(img):
     transform = T.Compose([T.ToTensor(),
@@ -30,13 +30,8 @@ def collate_fn(batch, custom_tokenizer = False):
         )
     
     if custom_tokenizer:
-        print('-----------------')
-        print(batch)
         tokens = custom_tokenizer([row['caption'] for row in batch], padding=True, truncation=True, return_tensors="pt")
-        print(tokens)
         batch = [(row[0], token) for row, token in zip(batch, tokens)]
-        print(batch)
-        print('-----------------')
         
     if isinstance(elem, np.ndarray) and elem.dtype.type is np.str_:
         batch = [it.item() for it in batch]
