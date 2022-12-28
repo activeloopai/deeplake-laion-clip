@@ -72,10 +72,8 @@ class DeepLakeDataModule(LightningDataModule):
         """
         super().__init__()
         self.batch_size = batch_size
-        self.num_threads = 4
         self.shuffle = shuffle
         self.num_workers = num_workers
-        self.num_threads = num_threads
         self.image_size = image_size
         self.rezie_ratio = resize_ratio
         self.custom_tokenizer = custom_tokenizer
@@ -116,13 +114,14 @@ class DeepLakeDataModule(LightningDataModule):
                 .transform({'image': image_transform, 'caption': txt_transform_local})\
                 .batch(self.batch_size, drop_last=True)\
                 .shuffle(self.shuffle)\
-                .pytorch(num_threads=self.num_threads, num_workers=self.num_workers, collate_fn=update_collate_fn)
+                .pytorch(num_workers=self.num_workers, collate_fn=update_collate_fn)
         else:
             self.train_dl = self.ds.pytorch(
                 num_workers=self.num_workers,
                 transform={'image': image_transform,
                            'caption': txt_transform_local},
                 batch_size=self.batch_size,
+                tensors=['image', 'caption'],
                 shuffle=self.shuffle,
                 drop_last=True,
                 collate_fn=update_collate_fn)

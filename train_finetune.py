@@ -29,5 +29,5 @@ if __name__ == '__main__':
     parser = DeepLakeDataModule.add_argparse_args(parser)
     parser = Trainer.add_argparse_args(parser)
     args = parser.parse_args()
-
+    args.replace_sampler_ddp = False
     main(args)

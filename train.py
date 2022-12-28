@@ -17,7 +17,6 @@ def main(hparams):
     del hparams.model_name
     
     dm = DeepLakeDataModule.from_argparse_args(hparams)
-    print(hparams)
     trainer = Trainer.from_argparse_args(hparams, precision=16, max_epochs=32, enable_model_summary=False)
     trainer.fit(model, dm)
 
@@ -29,5 +28,5 @@ if __name__ == '__main__':
     parser = DeepLakeDataModule.add_argparse_args(parser)
     parser = Trainer.add_argparse_args(parser)
     args = parser.parse_args()
-
+    args.replace_sampler_ddp = False
     main(args)
