@@ -17,7 +17,8 @@ def main(hparams):
     del hparams.model_name
     
     dm = DeepLakeDataModule.from_argparse_args(hparams)
-    trainer = Trainer.from_argparse_args(hparams, precision=16, max_epochs=32)
+    print(hparams)
+    trainer = Trainer.from_argparse_args(hparams, precision=16, max_epochs=32, enable_model_summary=False)
     trainer.fit(model, dm)
 
 
