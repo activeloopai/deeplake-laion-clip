@@ -23,7 +23,6 @@ if __name__ == "__main__":
     ds = deeplake.empty(path, overwrite=True)
 
     with ds:
-        ds.create_tensor('text', htype="text", chunk_compression='lz4')
         ds.create_tensor('SAMPLE_ID', htype='generic', chunk_compression='lz4')
         ds.create_tensor('URL', htype='text', chunk_compression='lz4') 
         ds.create_tensor('TEXT', htype='text', chunk_compression='lz4')
