@@ -22,7 +22,7 @@ python
 
 and then specify token while training
 ```bash
-python train.py --path 'hub://my_org/dataset' --token {your_token} --model_name ViT-B/16  --batch_size 48 --accelerator gpu --gpus 2 --strategy ddp --filter_NSFW
+python train.py --path 'hub://my_org/dataset' --token {your_token} --model_name ViT-B/16  --batch_size 48 --accelerator gpu --gpus 2 --strategy ddp --filter_NSFW --fp 16
 ```
 
 ### From Scratch 🌵

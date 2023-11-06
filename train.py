@@ -25,7 +25,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--model_name', type=str, required=True)
     parser.add_argument('--minibatch_size', type=int, default=0)
-    parser.add_argument('--fp', type=int, default=0)
+    parser.add_argument('--fp', type=int, default=16)
     parser = DeepLakeDataModule.add_argparse_args(parser)
     parser = Trainer.add_argparse_args(parser)
     args = parser.parse_args()
