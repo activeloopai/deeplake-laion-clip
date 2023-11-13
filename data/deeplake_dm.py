@@ -103,6 +103,11 @@ class DeepLakeDataModule(LightningDataModule):
         self.custom_tokenizer = custom_tokenizer
         self.ds = deeplake.load(path, token=token)
 
+        if filter_NSFW:
+          print("Filtering NSFW records... (It might take a while)")
+          self.ds = self.ds.query("SELECT * WHERE NSFW=='UNLIKELY'")
+          print("Filtering Done.")
+
     @staticmethod
     def add_argparse_args(parent_parser):
         parser = argparse.ArgumentParser(
