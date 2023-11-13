@@ -80,7 +80,8 @@ class DeepLakeDataModule(LightningDataModule):
                  shuffle: bool = False,
                  path: str = None,
                  token: str = None,
-                 custom_tokenizer: bool = False
+                 custom_tokenizer: bool = False,
+                 filter_NSFW: bool = False
                  ):
         """Create a text image datamodule from directories with congruent text and image names.
 
