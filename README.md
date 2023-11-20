@@ -17,7 +17,7 @@ pip3 install --upgrade deeplake
 and then specify token while training
 ```bash
 python train.py \
-    --path 'hub://{your_organization_name}/dataset' \
+    --path 'hub://{your_organization_name}/laion-400M' \
     --token {your_organization_token} \
     --model_name ViT-B/16  \
     --batch_size 64 \
