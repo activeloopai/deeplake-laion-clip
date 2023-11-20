@@ -4,25 +4,28 @@ A PyTorch Lightning solution to training CLIP from both scratch and fine-tuning 
  
 ## Usage with Deep Lake 🚂
 
-```
-python train.py --path 's3://hub-2.0-datasets-n/laion400m-data' --model_name ViT-B/16  --batch_size 48 --accelerator gpu --gpus 2 --strategy ddp 
-```
-
 to use fast deeplake dataloader, dataset need to be connected to your organization and your organization need to have credentials to access the dataset
 
 ```bash
-pip3 install --upgrade deeplake[enterprise]
-python
->>> import deeplake
->>> ds = deeplake.connect(src_path="s3://bucket/dataset", dest_path="hub://my_org/dataset", creds_key="my_managed_credentials_key", token="my_activeloop_token")
+pip3 install --upgrade deeplake
 ```
-
-
-
+```
+>>> import deeplake
+>>> ds = deeplake.deepcopy( "hub://genai360/laion-400M", "hub://{your_organization_name}/laion-400M", token="{your_organizaton_token}" )
+```
 
 and then specify token while training
 ```bash
-python train.py --path 'hub://my_org/dataset' --token {your_token} --model_name ViT-B/16  --batch_size 48 --accelerator gpu --gpus 2 --strategy ddp --filter_NSFW --fp 16
+python train.py \
+    --path 'hub://{your_organization_name}/dataset' \
+    --token {your_organization_token} \
+    --model_name ViT-B/16  \
+    --batch_size 64 \
+    --accelerator gpu \
+    --gpus 2 \
+    --strategy ddp \
+    --filter_NSFW \
+    --fp 16
 ```
 
 ### From Scratch 🌵
