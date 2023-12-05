@@ -4,7 +4,7 @@ A PyTorch Lightning solution to training CLIP from both scratch and fine-tuning 
  
 ## Usage with Deep Lake 🚂
 
-Specify the Activeloop API token to initiate training
+Replace your Activeloop API token with the placeholder and run the following command to initiate training.
 
 ```bash
 python train.py \
