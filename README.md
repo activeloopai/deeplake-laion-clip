@@ -4,20 +4,10 @@ A PyTorch Lightning solution to training CLIP from both scratch and fine-tuning 
  
 ## Usage with Deep Lake 🚂
 
-to use fast deeplake dataloader, dataset need to be connected to your organization and your organization need to have credentials to access the dataset
-
-```bash
-pip3 install --upgrade deeplake
-```
-```
->>> import deeplake
->>> ds = deeplake.deepcopy( "hub://genai360/laion-400M", "hub://{your_organization_name}/laion-400M", token="{your_organizaton_token}" )
-```
-
-and then specify token while training
+and then specify the token while training
 ```bash
 python train.py \
-    --path 'hub://{your_organization_name}/laion-400M' \
+    --path 'hub://genai360/laion-400M' \
     --token {your_organization_token} \
     --model_name ViT-B/16  \
     --batch_size 64 \
@@ -27,6 +17,7 @@ python train.py \
     --filter_NSFW \
     --fp 16
 ```
+
 
 ### From Scratch 🌵
 This training setup is easily usable right outside the box! Simply provide a training directory or your own dataset and we've got the rest covered. To train a model just specify a name from the paper name and tell us your training folder and batch size. All possible models can be seen in the yaml files in `models/config`
