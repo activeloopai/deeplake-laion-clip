@@ -4,11 +4,12 @@ A PyTorch Lightning solution to training CLIP from both scratch and fine-tuning 
  
 ## Usage with Deep Lake 🚂
 
-and then specify the token while training
+Specify the Activeloop API token to initiate training
+
 ```bash
 python train.py \
     --path 'hub://genai360/laion-400M' \
-    --token {your_organization_token} \
+    --token {your_activeloop_token} \
     --model_name ViT-B/16  \
     --batch_size 64 \
     --accelerator gpu \
