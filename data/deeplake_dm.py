@@ -9,21 +9,37 @@ import numpy as np
 import torch
 import deeplake
 from deeplake.util.iterable_ordered_dict import IterableOrderedDict
-from deeplake.enterprise.dataloader import indra_available, dataloader
+from deeplake.enterprise.dataloader import indra_available
 
+class ConvertRGBAtoRGB:
+    def __call__(self, img):
+        if img.mode == 'RGBA':
+            # Convert RGBA to RGB
+            img = img.convert('RGB')
+        return img
 
 def image_transform(img):
-    transform = T.Compose([T.ToTensor(),
+    if np.array( img ).shape[0] == 1:
+      return torch.tensor([]) # Mark corrupted images, these will be removed in collate_fn
+
+    transform = T.Compose([T.ToPILImage(),
+                           ConvertRGBAtoRGB(),
+                           T.ToTensor(),
                            T.RandomResizedCrop(224, scale=(
                                0.75, 1.), ratio=(1., 1.)),
                            T.Normalize((0.48145466, 0.4578275, 0.40821073),
                                        (0.26862954, 0.26130258, 0.27577711))
                            ])
-    return transform(img)
+    t = transform(img)
+    return t
 
 
 def txt_transform(txt: str, custom_tokenizer=False):
-    return txt if custom_tokenizer else clip.tokenize(txt, truncate=True)[0].numpy()
+    if custom_tokenizer:
+      return txt
+    else:
+      t = clip.tokenize(txt, truncate=True)[0].numpy()
+      return t
 
 
 def collate_fn(batch, custom_tokenizer=False):
@@ -31,13 +47,22 @@ def collate_fn(batch, custom_tokenizer=False):
     elem = batch[0]
 
     if isinstance(elem, IterableOrderedDict):
-        return IterableOrderedDict(
-            (key, collate_fn([d[key] for d in batch])) for key in elem.keys()
-        )
+        key_value_pairs = []
+        for key in elem.keys():
+          values = []
+          for d in batch:
+            if d['URL'].numel() != 0: # Remove corrupted images, the empty tensors (look at "image_transform" func)
+              values.append(d[key])
+
+          processed_values = collate_fn(values)
+
+          key_value_pairs.append((key, processed_values))
+
+        return IterableOrderedDict(key_value_pairs)
 
     if custom_tokenizer:
         tokens = custom_tokenizer(
-            [row['caption'] for row in batch], padding=True, truncation=True, return_tensors="pt")
+            [row['TEXT'] for row in batch], padding=True, truncation=True, return_tensors="pt")
         batch = [(row[0], token) for row, token in zip(batch, tokens)]
 
     if isinstance(elem, np.ndarray) and elem.dtype.type is np.str_:
@@ -45,18 +70,18 @@ def collate_fn(batch, custom_tokenizer=False):
 
     return torch.utils.data._utils.collate.default_collate(batch)
 
-
 class DeepLakeDataModule(LightningDataModule):
     def __init__(self,
                  batch_size: int = 8,
-                 num_workers: int = 2,
-                 num_threads: int = 8,
+                 num_workers: int = 1,
+                 num_threads: int = 1,
                  image_size: int = 224,
                  resize_ratio: int = 0.75,
                  shuffle: bool = False,
                  path: str = None,
                  token: str = None,
-                 custom_tokenizer: bool = False
+                 custom_tokenizer: bool = False,
+                 filter_NSFW: bool = False
                  ):
         """Create a text image datamodule from directories with congruent text and image names.
 
@@ -78,6 +103,11 @@ class DeepLakeDataModule(LightningDataModule):
         self.rezie_ratio = resize_ratio
         self.custom_tokenizer = custom_tokenizer
         self.ds = deeplake.load(path, token=token)
+
+        if filter_NSFW:
+          print("Filtering NSFW records... (It might take a while)")
+          self.ds = self.ds.query("SELECT * WHERE NSFW=='UNLIKELY'")
+          print("Filtering Done.")
 
     @staticmethod
     def add_argparse_args(parent_parser):
@@ -110,20 +140,20 @@ class DeepLakeDataModule(LightningDataModule):
 
         if indra_available():
             # Fast dataloader implemented in CPP
-            self.train_dl = dataloader(self.ds)\
-                .transform({'image': image_transform, 'caption': txt_transform_local})\
-                .batch(self.batch_size, drop_last=True)\
-                .shuffle(self.shuffle)\
-                .pytorch(num_workers=self.num_workers, collate_fn=update_collate_fn)
+            self.train_dl = self.ds.dataloader() \
+              .transform({'URL': image_transform, 'TEXT': txt_transform_local})\
+              .batch(self.batch_size, drop_last=True)\
+              .pytorch(num_workers=self.num_workers, collate_fn=update_collate_fn)
         else:
+            # For Windows machines where the CPP implementation is not available.
             self.train_dl = self.ds.pytorch(
                 num_workers=self.num_workers,
-                transform={'image': image_transform,
-                           'caption': txt_transform_local},
+                transform={'URL': image_transform,
+                           'TEXT': txt_transform_local},
                 batch_size=self.batch_size,
-                tensors=['image', 'caption'],
+                tensors=['URL', 'TEXT'],
                 shuffle=self.shuffle,
                 drop_last=True,
                 collate_fn=update_collate_fn)
-            
+
         return self.train_dl

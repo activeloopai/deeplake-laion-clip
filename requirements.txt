@@ -1,7 +1,7 @@
 git+https://github.com/openai/CLIP.git
-pytorch-lightning
-deeplake
+pytorch-lightning==1.06
+deeplake==3.8.6
 git+https://github.com/katsura-jp/pytorch-cosine-annealing-with-warmup
-tokenizers
-torch
-torchvision
+tokenizers==0.14.1
+torch==2.1.0
+torchvision==0.16.0
