@@ -106,7 +106,7 @@ class DeepLakeDataModule(LightningDataModule):
 
         if filter_NSFW:
           print("Filtering NSFW records... (It might take a while)")
-          self.ds = self.ds.query("SELECT * WHERE NSFW=='UNLIKELY'")
+          self.ds = self.ds.query("SELECT * WHERE NSFW=='UNLIKELY' and WIDTH between 50 and 450")
           print("Filtering Done.")
 
     @staticmethod
